@@ -1,10 +1,15 @@
-import { resolvers as demandResolver } from "./Demand/Demand";
+import { resolvers as demandResolvers } from "./Demand/Demand";
+import { resolvers as clientResolvers } from "./Client/Client";
+import { resolvers as nodeResolvers } from "./Node/Node";
 
 const resolvers = {
-    ...demandResolver,
+    ...nodeResolvers,
+    ...clientResolvers,
+    ...demandResolvers,
 
     Query: {
-        ...demandResolver.Query,
+        ...clientResolvers.Query,
+        ...demandResolvers.Query,
     },
 };
 
