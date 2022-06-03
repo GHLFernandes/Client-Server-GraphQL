@@ -1,33 +1,34 @@
 import express from 'express';
-import cors from 'cors';
+//import cors from 'cors';
+import micro_cors from 'micro-cors';
+import { ApolloServer, gql } from 'apollo-server-express'
+import { typeDefs } from './graphql/typeDefs';
+import resolvers from './graphql/resolvers';
 
-const server = express();
+const app = express();
 
-//server.use(cors()); uma forma global de resolver o erro de cors
-
-server.get('/status', (_, res) => {
-    res.send({
-        status: 'Ok',
-    });
+const server = new ApolloServer({
+    //declaraçao de graphos (entidades ou pequenos dominios da app)
+    // ! siginifica obrigatoriedade
+    typeDefs,
+    resolvers,
 });
 
-const enableCors = cors({ origin: 'http://localhost:3000' }); //uma das melhores forma de resolver o erro de cors
-
-server.options('/auth', enableCors)
-    .post('/auth', enableCors, express.json(), (req, res) => {
-        console.log(
-            'E-mail:', req.body.email,
-            '\nSenha:', req.body.pass
-        );
-
-        res.send({
-            Okay: true,
+server.start().then(res => {
+    server
+        .applyMiddleware({
+            app,
+            csrfPrevention: true, // see below for more about this
+            cors: {
+                origin: ["http://localhost:3000", "https://studio.apollographql.com"]
+            },
+            bodyParserConfig: true,
         });
-    })
+});
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8000;
 const HOSTNAME = process.env.HOSTNAME || '127.0.0.1';
 
-server.listen(PORT, HOSTNAME, () => {
+app.listen(PORT, HOSTNAME, () => {
     console.log(`Server is listening at http://${HOSTNAME}:${PORT}`);
 })
