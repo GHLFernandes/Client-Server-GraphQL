@@ -41,8 +41,18 @@ export const typeDefs = gql `
         email: String!
     }
 
+    input UpdateClientInput {
+        id: ID!
+        name: String!
+        email: String!
+    }
+
     extend type Mutation {
         createClient(input: CreateClientInput!): Client!
+        updateClient(input: UpdateClientInput!): Client!
+        deleteClient(id: ID!): Client!
+        enableClient(id: ID!): Client!
+        disableClient(id: ID!): Client!
     }
 `;
 
@@ -136,6 +146,113 @@ export const resolvers = {
             await clientRespository.write([...clients, client]);
 
             return client;
-        }
+        },
+
+        updateClient: async(_, { input }) => {
+            const clients = await clientRespository.read();
+
+            const currentClient = clients.find((client) => client.id === input.id);
+
+            if (!currentClient) {
+                throw new Error(`No client found with this ${id}`);
+            }
+
+            const updateClient = {
+                ...currentClient,
+                name: input.name,
+                email: input.email
+            };
+
+            const updateClients = clients.map((client) => {
+                if (client.id === updateClient.id) {
+                    return updateClient;
+                } else {
+                    return client;
+                }
+            });
+
+            await clientRespository.write(updateClients);
+
+            return updateClient;
+        },
+
+        deleteClient: async(_, { id }) => {
+            const clients = await clientRespository.read();
+
+            const client = clients.find((client) => client.id === id);
+
+            if (!client) {
+                throw new Error(`Can't delete client whit id "${id}"`);
+            }
+
+            const updateClients = clients.filter((client) => client.id !== id);
+
+            await clientRespository.write(updateClients);
+
+            return client;
+        },
+
+        enableClient: async(_, { id }) => {
+            const clients = await clientRespository.read();
+
+            const currentClient = clients.find((client) => client.id === id);
+
+            if (!currentClient) {
+                throw new Error(`No client found with this ${id}`);
+            }
+
+            if (!currentClient.disabled) {
+                throw new Error(`Client "${id}" is alredy enabled`);
+            }
+
+            const updateClient = {
+                ...currentClient,
+                disabled: false
+            };
+
+            const updateClients = clients.map((client) => {
+                if (client.id === updateClient.id) {
+                    return updateClient;
+                } else {
+                    return client;
+                }
+            });
+
+            await clientRespository.write(updateClients);
+
+            return updateClient;
+        },
+
+        disableClient: async(_, { id }) => {
+            const clients = await clientRespository.read();
+
+            const currentClient = clients.find((client) => client.id === id);
+
+            if (!currentClient) {
+                throw new Error(`No client found with this ${id}`);
+            }
+
+            if (currentClient.disabled) {
+                throw new Error(`Client "${id}" is alredy disabled`);
+            }
+
+            const updateClient = {
+                ...currentClient,
+                disabled: true
+            };
+
+            const updateClients = clients.map((client) => {
+                if (client.id === updateClient.id) {
+                    return updateClient;
+                } else {
+                    return client;
+                }
+            });
+
+            await clientRespository.write(updateClients);
+
+            return updateClient;
+        },
+
     }
 };
