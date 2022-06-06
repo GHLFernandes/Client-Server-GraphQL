@@ -2514,10 +2514,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-V3orv+ggDsWVHP99K3JlwtH20R7J4IhI1Kksgc+64q5VxgfRkQG8Ws3MFm/FZOKDYGy9feGFlZ70/HpCNe9QaA==
-  /@types/node/17.0.39:
+  /@types/node/17.0.40:
     dev: false
     resolution:
-      integrity: sha512-JDU3YLlnPK3WDao6/DlXLOgSNpG13ct+CwIO17V8q0/9fWJyeMJJ/VyZ1lv8kDprihvZMydzVwf0tQOqGiY2Nw==
+      integrity: sha512-UXdBxNGqTMtm7hCwh9HtncFVLrXoqA3oJW30j6XWp5BH/wu3mVeaxo7cq5benFdBw34HB3XDT2TRPI7rXZ+mDg==
   /@types/parse-json/4.0.0:
     dev: false
     resolution:
@@ -2867,7 +2867,7 @@ packages:
       integrity: sha512-IQboUWM4eKzWW+N/jij2sRatKMh99QEelo3Eb2q0qXkvPRISAj8Qxtmw5itwqK+TTkBuUIE45AxYPToqPtL5gg==
   /@wry/context/0.4.4:
     dependencies:
-      '@types/node': 17.0.39
+      '@types/node': 17.0.40
       tslib: 1.14.1
     dev: false
     resolution:
